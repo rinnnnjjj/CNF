@@ -1,0 +1,289 @@
+
+<!-- 
+    Author: Rinrada Thepkaew
+    Student ID: 1640706899
+    Section: 327D
+    Topic: CNF -->
+
+    <!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CNF</title>
+        <style>
+            /* CSS code goes here */
+            p {
+              font-size: 20px;
+              margin: 20px;
+            }
+          </style>
+    </head>
+    
+    <body>
+        <center>
+            <h1>CNF</h1>
+            <h2>รูปแบบปกติประพจน์รวม</h2>
+        </center>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Introduction</h2>
+        </center>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            CNF ย่อมาจาก Conjunctive Normal Form หรือรูปแบบปกติประพจน์รวม ทุกประโยคจะเกิดจากการเชื่อมต่อกันของประโยคย่อย 
+            โดยภายในวงเล็บ มีแค่ ตัวดำเนินการ OR (∨) และ นิเสธ (~)เท่านั้น และนอกวงเล็บสามารถมีตัวดำเนินการ AND (∧) ได้ และห้ามมี
+            ตัวดำเนินการ → และ ↔ ในประโยค สาเหตุที่แปลงในรูปแบบนี้เพราะการต่อวงจรไฟฟ้าจะมีรูปแบบแค่ AND กับ OR และ NOT เท่านั้น ไม่มี → และ ↔
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Disjunction คือ ตัวเชื่อมระหว่างวงเล็บ คือตัว ∧ หรือ AND
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Conjuction คือ ตัวเชื่อมระหว่างวงเล็บ คือตัว ∨ หรือ OR
+            <br><br>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>ตัวอย่างที่เป็น CNF</b> 
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;1. (A∨B)∧(¬C∨D∨E) — ภายในวงเล็บไม่มี∧
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;2. (¬A∨B) — ภายในวงเล็บไม่มี∧
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;3. (A∨¬B∨¬C)∧(D)∧(¬E∨F) — ภายในวงเล็บไม่มี∧
+            <br><br> 
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>ตัวอย่างที่ไม่เป็น CNF</b> 
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;1. A∨(B∧C) — ภายในวงเล็บมี∧
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;2. (A→B) — ภายในวงเล็บมี→
+            <br><br> 
+            &nbsp;&nbsp;&nbsp;&nbsp;3. ¬(A∨B) — มีนิเสธอยู่ข้างนอก
+            <br><br> 
+        </p>
+
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Explain Algorithm</h2>
+        </center>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;กระบวนการทั่วไปในการแปลงสูตรตรรกะเป็น CNF ประกอบด้วยขั้นตอนหลายอย่าง เช่น 
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;1.Eliminate Equivalences: แทนที่สูตรที่ใช้ตัวดำเนินการ "ก็ต่อเมื่อ" (↔) ด้วยสูตรที่มีเพียงตัวดำเนินการ "ถ้า" (→) และ AND (∧).
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;2.Eliminate Implications: แทนที่ตัวดำเนินการ ถ้าแล้ว (→) ด้วย OR (∨) และ negation (¬). เช่น A→B จะกลายเป็น ¬A∨B.
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;3.Move NOTs Inwards: ใช้กฎของ De Morgan เพื่อ "ย้าย" negations เข้าไปภายในสูตรให้ใกล้กับ literals ที่สุด เช่น ¬(A∨B) กลายเป็น ¬A∧¬B.
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;4.Distribute ANDs over ORs: ใช้การกระจายเพื่อจัดรูปสูตรให้เป็นรูปแบบที่แต่ละ AND มี ORs ภายในเท่านั้น, เช่น A∨(B∧C) กลายเป็น (A∨B)∧(A∨C).
+           
+            <br><br>
+        </p>
+
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Example</h2>
+        </center>
+        <p>
+            <br><br>
+            <center><p><b>โจทย์: แปลงสูตรตรรกะ แปลงสูตรตรรกะ (P↔(Q∨R))∧(S→¬T)  ให้อยู่ในรูปแบบ CNF.</b></p></center>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ขั้นตอนที่ 1: Eliminate Equivalences</b>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;กฎ: P↔Q=(P→Q)∧(Q→P)
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;แปลง P↔(Q∨R) โดยใช้กฎข้างต้น:P↔(Q∨R) กลายเป็น (P→(Q∨R))∧((Q∨R)→P)
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ขั้นตอนที่ 2: Eliminate Implications</b>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;กฎ: P→Q=¬P∨Q
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;แปลง P→(Q∨R) และ (Q∨R)→P:
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;P→(Q∨R) กลายเป็น ¬P∨(Q∨R)
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(Q∨R)→P กลายเป็น ¬(Q∨R)∨P
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ขั้นตอนที่ 3: Move NOTs Inwards</b>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;กฎของ De Morgan: ¬(P∨Q)=¬P∧¬Q 
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;แปลง ¬(Q∨R) กลายเป็น ¬Q∧¬R
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ขั้นตอนที่ 4: Distribute ANDs over ORs</b>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;กฎการกระจาย: P∨(Q∧R)=(P∨Q)∧(P∨R)
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ใช้กฎการกระจายกับ (¬Q∧¬R)∨P:
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(¬Q∧¬R)∨P กลายเป็น (¬Q∨P)∧(¬R∨P)
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>ขั้นตอนที่ 5: นำสูตรตรรกะที่ได้จากข้างต้นมาเชื่อมต่อกัน ได้ดังนี้</b>
+            <br><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(¬P∨Q∨R)∧(¬Q∨P)∧(¬R∨P)∧(¬S∨¬T) เป็นCNF
+        </p>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Application or Benefit</h2>
+        </center>    
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;</b>1.</b>SAT Solvers: CNF เป็นรูปแบบมาตรฐานสำหรับการแสดงสูตรตรรกะในการแก้ปัญหา Satisfiability (SAT).
+             SAT Solvers เป็นโปรแกรมที่สามารถตรวจสอบได้ว่ามีการกำหนดค่าของตัวแปรตรรกะที่ทำให้สูตรตรรกะเป็นจริงหรือไม่<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;</b>2.</b> การวิเคราะห์และการประมวลผลของสูตรตรรกะ: CNF ให้วิธีที่มีโครงสร้างเพื่อจัดการกับสูตรตรรกะ 
+            ทำให้เหมาะสำหรับการประมวลผลโดยอัลกอริธึมต่างๆ<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;</b>3.</b>การพิสูจน์ทฤษฎีบทอัตโนมัติ: ในการพิสูจน์ทฤษฎีบท, CNF สามารถใช้เป็นจุดเริ่มต้นในการพิสูจน์โดยอัตโนมัติ
+             หรือเพื่อทำการทดสอบตรรกะที่ซับซ้อน.<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;</b>4.</b>การแปลงสูตรตรรกะ: CNF ให้ฐานในการแปลงสูตรตรรกะไปยังรูปแบบที่มีโครงสร้างและสามารถจัดการได้ง่ายขึ้นในด้านการวิเคราะห์ตรรกศาสตร์.<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;</b>5.</b>การออกแบบวงจรตรรกะ: CNF สามารถใช้เพื่อสร้างและทดสอบวงจรตรรกะในวิทยาการคอมพิวเตอร์ 
+            โดยเฉพาะในการออกแบบวงจรดิจิตอล.<br> 
+        </p>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Flow Chart</h2>
+            <p><b>
+                ด้านล่างนี้เป็นผังงานที่แสดงขั้นตอนของอัลกอริธึม CNF:
+            </b></p>
+        <img src="Flowchart.jpg" alt="Flow Chart" width="800">
+        </b></p>
+        </center>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Code</h2>
+        
+        <table style="border-collapse: collapse;border: 1px solid #008000;">
+            <thead>
+            <tr>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+                    <center><b>บรรทัดที่</b></center>
+                </td>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+                    <center><b>โปรแกรม</b></center>
+                </td>
+            </tr>    
+            </thead>
+            <tr>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+        <pre>
+        1
+        2
+        3
+        4
+        5
+        6
+        7
+        8
+        9
+        10
+        11
+        12
+        13
+        14
+        15
+        16
+        17
+        18
+        19
+        20
+    
+            </pre>
+                </td>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+                    <pre>
+                        from sympy import symbols
+                        from sympy.logic.boolalg import And, Or, Not, Implies, Equivalent, to_cnf
+                        
+                        # Define the symbols (variables) used in the expression
+                        P, Q, R, S, T = symbols('P Q R S T')
+                        
+                        # Input expression using sympy's logical functions
+                        # Equivalent(P, Or(Q, R)) represents (P == (Q | R))
+                        # Implies(S, Not(T)) represents (S >> ~T)
+                        input_expr = And(Equivalent(P, Or(Q, R)), Implies(S, Not(T)))
+                        
+                        # Convert the expression to Conjunctive Normal Form (CNF)
+                        cnf_expr = to_cnf(input_expr, simplify=True)
+                        
+                        # Print the CNF expression
+                        print(cnf_expr)
+                        
+                    </pre>
+                </td>
+            </tr>
+        </table> 
+        <br><br>
+        <h3>ผลลัพธ์การทำงานของโปรแกรม</h3>
+        <table style="border-collapse: collapse;border: 1px solid #008000;">
+            <thead>
+            <tr>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+                    <center><b>บรรทัดที่</b></center>
+                </td>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+                    <center><b>ผลลัพธ์</b></center>
+                </td>
+            </tr>
+            </thead>
+            <tr>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+        <pre>
+        <center><b>1</b></center></pre>
+                </td>
+                <td style="border-collapse: collapse;border: 1px solid #008000;">
+        <pre>
+        </b></center>(P | ~Q) & (P | ~R) & (~S | ~T) & (Q | R | ~P)</b></center></pre>
+                </td>
+            </tr>
+        </table></center><br><br> 
+    </center>
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+            <h2>Explain Code</h2>
+        </center>
+        <p>
+            <b>CNF Converter</b>
+            <br></br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>1. Import "sympy":  </b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SymPy ถูกนำเข้ามาใช้เพื่อให้สามารถทำการคำนวณและจัดการกับนิพจน์เชิงตรรกะได้<br><br>
+        
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>2. Define Symbols: </b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;กำหนดตัวแปร P,Q,R,S, and T ให้ใช้ในนิพจน์เชิงตรรกะ<br><br>
+ 
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>3. Create a Logical Expression:</b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; นิพจน์ตรรกะถูกสร้างขึ้นโดยใช้ฟังก์ชันของ SymPy เช่น And, Or, Not, Implies, และ Equivalent. ในกรณีนี้, นิพจน์ที่ถูกสร้างคือ (P≡(Q∨R))∧(S→¬T)
+            <br><br>
+    
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>4. Transform to CNF:  </b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; นิพจน์ตรรกะที่ถูกกำหนดขึ้นได้ถูกแปลงเป็นรูปแบบ CNF โดยใช้ฟังก์ชัน to_cnf ของ SymPy. การแปลงนี้ทำให้ตัวดำเนินการในวงเล็บทั้งหมดเป็น OR <br><br>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;<b>5. Print the Result:  </b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; พิมพ์นิพจน์ที่ได้จากการแปลงเป็น CNF ออกมา <br><br>
+        </p>
+    
+        <!------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+        <center>
+        <h2> จัดทำโดย </h2>
+        <table>
+            <tr>
+                <td><img src="Profile_circle.png"  width="300"></td>
+                <td style="font-size: 18px;">
+                    นางสาวรินรดา เทพแก้ว (มีน) <br>
+                    รหัสนักศึกษา 1640706899 ชั้นปีที่ 3 เลขที่ 32 เซคชั้น 327D <br>
+                    <br><br>
+                    Rinrada Thepkaew (Fee) <br>
+                    Student ID 1640706899 Year 3 No. 32 Section 327D<br>
+                    <br><br>
+                    rinrada.thep@bumail.net<br>
+                    +66 84 326 5265<br>
+                </td>        
+            </tr>
+        </table><br><br>
+        </center>
+    </body>
+    
+    </html>
+        
